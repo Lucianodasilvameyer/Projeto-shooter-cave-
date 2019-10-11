@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Flecha : MonoBehaviour
-{
-    public Transform target;
+{    
     public float speed = 5f;
     Vector3 direction;
 

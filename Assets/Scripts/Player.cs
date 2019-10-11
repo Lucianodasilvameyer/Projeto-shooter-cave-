@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class Player : MonoBehaviour
 {
+    public Transform target;
     public Transform posicaoFlecha;
 
     [SerializeField]
@@ -20,7 +21,7 @@ public class Player : MonoBehaviour
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
 
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
@@ -28,6 +29,11 @@ public class Player : MonoBehaviour
     {
         movement();
         animations();
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            AtirarFhecha();
+        }
     }
 
     void movement()
@@ -57,11 +63,6 @@ public class Player : MonoBehaviour
     }
     public void AtirarFhecha()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            Vector3 instantiatePosition = posicaoFlecha;
-
-            Rigidbody JogarFlecha = Instantiate(Flecha, instantiatePosition, Quaternion.identity) as Rigidbody;
-        }
+        Rigidbody JogarFlecha = Instantiate(Flecha, posicaoFlecha.position, posicaoFlecha.rotation) as Rigidbody;
     }
 }

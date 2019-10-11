@@ -7,16 +7,27 @@ using UnityEngine.UI;
 using System.Linq;
 public class Game : MonoBehaviour
 {
+
+    private int carregarFlechaInicial;
+
+    [SerializeField]
+    private int carrregarFlechaMax;
+   
     List<GameObject> FlechasList = new List<GameObject>();
+    List<GameObject> PedraList = new List<GameObject>();
 
     [SerializeField]
     Player player_ref;
 
     public GameObject municaoFlechasPrefab;
+    public GameObject municaoPedraPrefab;
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (Time.time >= carregarFlechaInicial + carrregarFlechaMax)
+        {
+            SpawnarFlecha();
+        } 
     }
 
     // Update is called once per frame
@@ -44,6 +55,28 @@ public class Game : MonoBehaviour
             GameObject ru = Instantiate(municaoFlechasPrefab, position, Quaternion.identity);
 
             FlechasList.Add(ru);
+        }
+    }
+    public void SpawnarPedra(int disPedPlay)
+    {
+        Vector3 position = player_ref.transform.position;
+        position.x += disPedPlay;
+        position.y += disPedPlay;
+        position.z = -1;
+
+        if (PedraList.Any())
+        {
+            int index = PedraList.FindLastIndex(x => x.GetType() == typeof(Pedra));
+            Pedra P = (Pedra)PedraList[index];
+            PedraList.RemoveAt(index);
+            P.transform.position = position;
+            P.gameObject.SetActive(true);
+        }
+        else
+        {
+            GameObject fe = Instantiate(municaoPedraPrefab, position, Quaternion.identity);
+
+            FlechasList.Add(fe);
         }
     }
 
