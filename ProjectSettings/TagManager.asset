@@ -7,6 +7,9 @@ TagManager:
   - enemyBug
   - Castle
   - Inimigo
+  - Enemy
+  - Obstacle
+  - spawnPoint
   layers:
   - Default
   - TransparentFX

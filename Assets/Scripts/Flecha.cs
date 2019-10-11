@@ -14,13 +14,11 @@ public class Flecha : MonoBehaviour
     float timerSelfDestruct = 0;
     float timerSelfDestruct_Max = 5;
 
-
-
     // Use this for initialization
     void Start()
     {
-
         timerSelfDestruct = Time.time;
+
         Transform playerT = GameObject.FindGameObjectWithTag("Player").transform;
 
         if (playerT && playerT != null)
@@ -30,27 +28,18 @@ public class Flecha : MonoBehaviour
                 if (child.name == "Camera Target")
                 {
                     player_ref.target = child;
+
                     break;
                 }
             }
         }
-
-
-
-        Vector3 input = player_ref.target.position - transform.position;
-
-        direction = input.normalized;
     }
 
     void Update()
     {
-
-
-        transform.Translate(direction * speed * Time.deltaTime);
-
         if (Time.time >= timerSelfDestruct + timerSelfDestruct_Max)
         {
-            if (Vector3.Distance(transform.position, player_ref.target.transform.position) >= 30f)
+            if (Vector3.Distance(transform.position, player_ref.transform.position) >= 20f)
             {
                 Destroy(gameObject);
             }
@@ -61,28 +50,22 @@ public class Flecha : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) 
     {
-        if (other.transform.CompareTag("Player") ||
-            other.transform.CompareTag("Obstacle"))
+        if (other.transform.CompareTag("Player") || other.transform.CompareTag("Enemy") || other.transform.CompareTag("Obstacle"))
         {
-
-            Destroy(transform.gameObject);
+            Destroy(gameObject);
         }
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.transform.CompareTag("Player") || collision.transform.CompareTag("Enemy") || collision.transform.CompareTag("Obstacle"))
         {
-
             Destroy(gameObject);
         }
-
-
     }
 
     public static explicit operator Flecha(GameObject v)
     {
         throw new NotImplementedException();
     }
-  
-
 }

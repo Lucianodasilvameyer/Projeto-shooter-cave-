@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class Player : MonoBehaviour
 {
     public Transform target;
+
     public Transform posicaoFlecha;
 
     [SerializeField]
@@ -17,6 +18,9 @@ public class Player : MonoBehaviour
 
     Animator animator;
 
+    [SerializeField]
+    int arrowSpeed;
+
     private void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -27,27 +31,27 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        movement();
+        if (Input.GetMouseButtonDown(1))
+        {
+            movement();
+        }
+
         animations();
 
         if (Input.GetKeyDown(KeyCode.T))
         {
-            AtirarFhecha();
-            
+            AtirarFlecha();            
         }
     }
 
     void movement()
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 300, clickable))
-            {
-                navMeshAgent.SetDestination(hit.point);
-            }
+        if (Physics.Raycast(ray, out hit, 300, clickable))
+        {
+            navMeshAgent.SetDestination(hit.point);
         }
     }
 
@@ -62,8 +66,11 @@ public class Player : MonoBehaviour
             animator.SetBool("isMoving", false);
         }
     }
-    public void AtirarFhecha()
+
+    public void AtirarFlecha()
     {
         Rigidbody JogarFlecha = Instantiate(Flecha, posicaoFlecha.position, posicaoFlecha.rotation) as Rigidbody;
+
+        JogarFlecha.velocity = (posicaoFlecha.forward * arrowSpeed);
     }
 }

@@ -10,6 +10,8 @@ public class Game : MonoBehaviour
 
     private int carregarFlechaInicial;
 
+    public float waveDelay = 3f;
+
     [SerializeField]
     private int carrregarFlechaMax;
 
@@ -26,9 +28,39 @@ public class Game : MonoBehaviour
 
     public GameObject municaoFlechasPrefab;
     public GameObject municaoPedraPrefab;
+
+    [SerializeField]
+    public Queue<Inimigo> inimigos = new Queue<Inimigo>();
+
+    [SerializeField]
+    Transform[] spawns = new Transform[3];
+
+    public GameObject inimigo;
+
+    [SerializeField]
+    public int maxQueue;
+
+    int maxSpawnPoints = 3;
+
     // Start is called before the first frame update
     void Start()
     {
+        GameObject[] spawnsGO = GameObject.FindGameObjectsWithTag("spawnPoint");
+
+        for (int i = 0; i < spawnsGO.Length; i++)
+        {
+            if (i >= spawns.Length)
+            {
+                break;
+            }
+
+            spawns[i] = spawnsGO[i].transform;
+
+            Vector3 pos = spawns[i].position;
+
+            spawns[i].position = pos;
+        }
+
         if (Time.time >= carregarFlechaInicial + carrregarFlechaMax)
         {
             SpawnarFlecha(Random.Range(4,2));
@@ -38,13 +70,20 @@ public class Game : MonoBehaviour
         {
             SpawnarPedra(Random.Range(5, 3));
         }
+
+        StartCoroutine("SpawnWaves");
+    }    
+    
+    IEnumerator SpawnWaves()
+    {
+        while(player_ref != null)//Enquanto o player está vivo
+        {
+            spawnInimigos();
+
+            yield return new WaitForSeconds(waveDelay);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void SpawnarFlecha(int disFlePlay)
     {
             Vector3 position = player_ref.transform.position;
@@ -67,6 +106,7 @@ public class Game : MonoBehaviour
             FlechasList.Add(ru);
         }
     }
+
     public void SpawnarPedra(int disPedPlay)
     {
         Vector3 position = player_ref.transform.position;
@@ -90,5 +130,58 @@ public class Game : MonoBehaviour
         }
     }
 
+    public void spawnInimigos()
+    {
+        if (inimigos.Count > 0)
+        {
+            respawn();
+        }
+        else
+        {
+            int spawnLocation = Random.Range(0, maxSpawnPoints);
 
+            if (!spawns[spawnLocation])
+            {
+                return;
+            }
+
+            Vector3 position = spawns[spawnLocation].position;
+
+            Inimigo i = Instantiate(inimigo, position, Quaternion.identity).GetComponent<Inimigo>();
+
+            i.spawnPoint = spawnLocation;
+        }
+    }
+
+    public void respawn()
+    {
+        int spawnLocation = Random.Range(0, maxSpawnPoints);
+
+        Inimigo i = inimigos.Dequeue();
+
+        while (spawnLocation == i.spawnPoint)
+        {
+            spawnLocation = Random.Range(0, maxSpawnPoints);
+        }
+
+        i.spawnPoint = spawnLocation;
+
+        i.transform.position = spawns[i.spawnPoint].position;
+
+        i.gameObject.SetActive(true);
+    }
+
+    public void addToPool(Inimigo i)
+    {
+        if (inimigos.Count < maxQueue)
+        {
+            i.gameObject.SetActive(false);
+
+            inimigos.Enqueue(i);
+        }
+        else
+        {
+            Destroy(i.gameObject);
+        }
+    }
 }
