@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Flecha : MonoBehaviour
-{    
+{
+    [SerializeField]
+    Player player_ref;
+
     public float speed = 5f;
     Vector3 direction;
 
@@ -26,7 +29,7 @@ public class Flecha : MonoBehaviour
             {
                 if (child.name == "Camera Target")
                 {
-                    target = child;
+                    player_ref.target = child;
                     break;
                 }
             }
@@ -34,7 +37,7 @@ public class Flecha : MonoBehaviour
 
 
 
-        Vector3 input = target.position - transform.position;
+        Vector3 input = player_ref.target.position - transform.position;
 
         direction = input.normalized;
     }
@@ -47,7 +50,7 @@ public class Flecha : MonoBehaviour
 
         if (Time.time >= timerSelfDestruct + timerSelfDestruct_Max)
         {
-            if (Vector3.Distance(transform.position, target.transform.position) >= 30f)
+            if (Vector3.Distance(transform.position, player_ref.target.transform.position) >= 30f)
             {
                 Destroy(gameObject);
             }

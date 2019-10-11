@@ -12,7 +12,12 @@ public class Game : MonoBehaviour
 
     [SerializeField]
     private int carrregarFlechaMax;
-   
+
+    private int carregarPedraInicial;
+
+    [SerializeField]
+    private int carrregarPedraaMax;
+
     List<GameObject> FlechasList = new List<GameObject>();
     List<GameObject> PedraList = new List<GameObject>();
 
@@ -26,8 +31,13 @@ public class Game : MonoBehaviour
     {
         if (Time.time >= carregarFlechaInicial + carrregarFlechaMax)
         {
-            SpawnarFlecha();
-        } 
+            SpawnarFlecha(Random.Range(4,2));
+            
+        }
+        if (Time.time >= carregarPedraInicial + carrregarPedraaMax)
+        {
+            SpawnarPedra(Random.Range(5, 3));
+        }
     }
 
     // Update is called once per frame

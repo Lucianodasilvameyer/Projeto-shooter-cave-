@@ -33,6 +33,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.T))
         {
             AtirarFhecha();
+            
         }
     }
 
